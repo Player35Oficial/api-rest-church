@@ -8,5 +8,6 @@ router.get("/", (_, res) => {
 });
 
 router.post("/dizimo", DizimoController.createValidation, DizimoController.create);
+router.get("/dizimo", DizimoController.getAllValidation, DizimoController.getAll);
 
 export { router };
