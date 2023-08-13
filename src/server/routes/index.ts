@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DizimoController } from "../controllers";
+import { TransacoesController } from "../controllers";
 
 const router = Router();
 
@@ -7,7 +7,9 @@ router.get("/", (_, res) => {
   return res.send("Olá, dev!");
 });
 
-router.post("/dizimo", DizimoController.createValidation, DizimoController.create);
-router.get("/dizimo", DizimoController.getAllValidation, DizimoController.getAll);
+// Todas as transações
+router.get("/transacao", TransacoesController.getAllValidation, TransacoesController.getAll);
+router.get("/transacao/dizimo", TransacoesController.getAllValidation, TransacoesController.getAll);
+router.get("/transacao/oferta", TransacoesController.getAllValidation, TransacoesController.getAll);
 
 export { router };
