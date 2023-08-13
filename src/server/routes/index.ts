@@ -7,6 +7,6 @@ router.get("/", (_, res) => {
   return res.send("Olá, dev!");
 });
 
-router.post("/teste", DizimoController.create);
+router.post("/dizimo", DizimoController.createValidation, DizimoController.create);
 
 export { router };
