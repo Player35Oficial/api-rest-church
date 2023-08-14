@@ -3,18 +3,31 @@ import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
 import { validation } from "../../shared/middlewares";
 import { ITransacao, TransacaoType } from "../../database/models";
+import { TransacaoProvider } from "../../database/providers";
 
-interface IBodyProps extends Omit<ITransacao, "id_usuario" | "id_transacao" | "date">{}
+interface IBodyProps extends Omit<ITransacao, "id_transacao" | "date">{}
 
 export const createValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(yup.object().shape({
-    amount: yup.number().required(),
-    type: yup.mixed<TransacaoType>().oneOf(Object.values(TransacaoType)).required(),
+    id_tipos_transacao: yup.mixed<TransacaoType>().oneOf(Object.values(TransacaoType)).required(),
+    id_usuario: yup.number().default(0).required(),
+    valor: yup.number().required(),
   })),
 }));
 
 export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
-  console.log(req.body);
+
+  const result = await TransacaoProvider.create(req.body);
+  
+  
+  if (result instanceof Error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      errors: {
+        default: result.message,
+      }
+    });
+  }
+  console.log(result);
 
   return res.status(StatusCodes.CREATED).send("Create!");
 };
