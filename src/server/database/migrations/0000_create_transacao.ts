@@ -7,12 +7,11 @@ export async function up(knex: Knex) {
   return knex
     .schema
     .createTable(ETableNames.transacao, table => {
-      table.bigIncrements("id_transacao").primary().index();
-      table.bigInteger("id_usuario").references("id_usuario");
-      table.bigInteger("id_tipos_transacao").references("id_tipos_transacao");
+      table.bigIncrements("id").primary().index();
+      table.bigInteger("id_usuario").notNullable();
+      table.text("id_tipos_transacao").notNullable();
       table.float("valor").checkPositive();
-      table.dateTime("data");
-
+      table.dateTime("data").defaultTo(Date.now());
     })
     .then(() => {
       console.log(`# Created table ${ETableNames.transacao}`);
