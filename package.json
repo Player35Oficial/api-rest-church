@@ -26,6 +26,13 @@
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "ts-node-dev ./src/index.ts",
+    "production": "node ./build/index.ts",
+    "postinstall": "tsc",
+    "knex:migrate": "yarn knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
+    "knex:rollback": "yarn knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
+    "knex:rollback-all": "yarn knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback --all",
+    "knex:seed": "yarn knex --knexfile ./src/server/database/knex/Environment.ts seed:run"
   }
 }
