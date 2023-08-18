@@ -2,13 +2,19 @@ import { ETableNames } from "../../ETableNames";
 import { Knex } from "../../knex";
 
 
-export const deleteById = async (id: number): Promise <void | Error>  => {
+export const deleteById = async (id: number, id_tipos_transacao: string): Promise <void | Error>  => {
 
+  let repoToDelete;
   try {
+    repoToDelete = await Knex(ETableNames.transacao).where("id", id).first();
+    if (repoToDelete.id_tipos_transacao !== id_tipos_transacao) {
+      return new Error("Erro ao excluir registro");
+    } else {
+      repoToDelete = await Knex(ETableNames.transacao).where("id", id).first().del();
+    }
 
-    const res = await Knex(ETableNames.transacao).where("id", id).del();
 
-    if (res > 0) return;
+    if (repoToDelete > 0) return;
     return new Error("Erro ao excluir registro");
   } catch (error) {
     console.error(error);

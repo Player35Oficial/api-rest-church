@@ -22,7 +22,8 @@ export const getAllValidation = validation((getSchema => ({
 export const getAll = async (req:Request<{},{},{}, IQueryProps>, res: Response) => {
   const { limit, page } = req.query;
 
-  const path = (req.path.split("/").pop());
+  const path: string | any = (req.path.split("/").filter(function (i) {return i;})).pop();
+  console.log(path);
 
   switch (path) {
     case "dizimo":
@@ -31,10 +32,17 @@ export const getAll = async (req:Request<{},{},{}, IQueryProps>, res: Response) 
     case "oferta":
       req.query.filter = "oferta";
       break;
-    default:
+    case "transacao":
       req.query.filter = "";
+      break;
+    default:
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        errors: {
+          default: "Erro ao procurar registros"
+        }
+      });
   }
-  
+  // console.log(path.indexOf(""));
   const results = await TransacaoProvider.getAll(req.query.filter || "", limit || 10, page || 1);
 
   if (results instanceof Error) {
