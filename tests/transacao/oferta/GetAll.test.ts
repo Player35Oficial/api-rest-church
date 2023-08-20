@@ -7,8 +7,7 @@ describe("Oferta: Get All", () => {
     const res1 = await testServer
       .get("/transacao/oferta").send();
       
-    
-    expect(res1.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+    expect(res1.status).toEqual(StatusCodes.OK);
   });
 
 }); 

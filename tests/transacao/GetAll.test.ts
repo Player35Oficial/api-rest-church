@@ -8,7 +8,7 @@ describe("Transacao: Get All", () => {
       .get("/transacao").send();
       
     
-    expect(res1.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+    expect(res1.status).toEqual(StatusCodes.OK);
   });
 
 }); 

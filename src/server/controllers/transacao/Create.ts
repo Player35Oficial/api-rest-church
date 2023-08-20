@@ -10,8 +10,8 @@ interface IBodyProps extends Omit<ITransacao, "id_transacao" | "date">{}
 export const createValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(yup.object().shape({
     id_tipos_transacao: yup.mixed<TransacaoType>().oneOf(Object.values(TransacaoType)).required(),
-    id_usuario: yup.number().default(0).required(),
-    valor: yup.number().required(),
+    id_usuario: yup.number().required().strict(true),
+    valor: yup.number().positive().required().moreThan(0).strict(true),
   })),
 }));
 

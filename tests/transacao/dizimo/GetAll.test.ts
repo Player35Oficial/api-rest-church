@@ -8,7 +8,7 @@ describe("Dizimo: GetAll", () => {
       .get("/transacao/dizimo").send();
       
     
-    expect(res1.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+    expect(res1.status).toEqual(StatusCodes.OK);
   });
 
 }); 
