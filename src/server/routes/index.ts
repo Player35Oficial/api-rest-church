@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { TransacoesController } from "../controllers";
+import { TransacoesController, UsuariosController } from "../controllers";
 
 const router = Router();
 
@@ -25,5 +25,8 @@ router.put("/transacao/:id_tipos_transacao/:id", TransacoesController.updateById
 // router.get("/transacao/oferta/:id", TransacoesController.getByIdValidation, TransacoesController.getById);
 // router.delete("/transacao/oferta/:id", TransacoesController.deleteByIdValidation, TransacoesController.deleteById);
 // router.put("/transacao/oferta/:id", TransacoesController.updateByIdValidation, TransacoesController.updateById);
+
+// Usuario
+router.post("/cadastrar", UsuariosController.createValidation, UsuariosController.create);
 
 export { router };
