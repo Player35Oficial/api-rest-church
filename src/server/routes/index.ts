@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { TransacoesController, UsuariosController } from "../controllers";
+import { ensureAuthenticated } from "../shared/middlewares";
 
 const router = Router();
 
@@ -8,10 +9,9 @@ router.get("/", (_, res) => {
 });
 
 // Todas as transações
-router.get("/transacao", TransacoesController.getAllValidation, TransacoesController.getAll);
+router.get("/transacao/", ensureAuthenticated ,TransacoesController.getAllValidation, TransacoesController.getAll);
 
 // Todas as transacoes - Dizimo
-router.get("/transacao/", TransacoesController.getAllValidation, TransacoesController.getAll);
 router.get("/transacao/:id_tipos_transacao", TransacoesController.getAllValidation, TransacoesController.getAll);
 router.post("/transacao/", TransacoesController.createValidation, TransacoesController.create);
 router.get("/transacao/:id_tipos_transacao/:id", TransacoesController.getByIdValidation, TransacoesController.getById);
@@ -28,5 +28,6 @@ router.put("/transacao/:id_tipos_transacao/:id", TransacoesController.updateById
 
 // Usuario
 router.post("/cadastrar", UsuariosController.createValidation, UsuariosController.create);
+router.post("/entrar", UsuariosController.signInValidation, UsuariosController.signIn);
 
 export { router };

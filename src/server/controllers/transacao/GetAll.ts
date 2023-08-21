@@ -21,6 +21,8 @@ export const getAllValidation = validation((getSchema => ({
 
 export const getAll = async (req:Request<{},{},{}, IQueryProps>, res: Response) => {
   const { limit, page } = req.query;
+  console.log("idUsuario "+ req.headers.idUsuario);
+  console.log("cargoUsuario "+ req.headers.cargoUsuario);
 
   const path: string | any = (req.path.split("/").filter(function (i) {return i;})).pop();
   console.log(path);

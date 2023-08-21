@@ -4,7 +4,7 @@ import { validation } from "../../shared/middlewares";
 import * as yup from "yup";
 import { UsuariosProvider } from "../../database/providers";
 import { StatusCodes } from "http-status-codes";
-import { PasswordCrypto } from "../../shared/services";
+import { JWTService, PasswordCrypto } from "../../shared/services";
 
 interface IBodyProps extends Omit<IUsuario, "id_usuario" | "cargo" | "nome"> { }
 
@@ -15,7 +15,7 @@ export const signInValidation = validation((getSchema) => ({
   }))
 }));
 
-export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) => { 
+export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) => {
 
   const { email, senha } = req.body;
 
@@ -38,8 +38,18 @@ export const signIn = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
       }
     });
   } else {
-    return res.status(StatusCodes.OK).json({ accessToken: "teste.teste" });
-  }
 
+    const accessToken = JWTService.sign({ uid: usuario.id_usuario, cargo: usuario.cargo });
+
+    if (accessToken === "JWT_SECRET_NOT_FOUND") {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        errors: {
+          default: "Erro ao gerar o token de acesso"
+        }
+      });
+    }
+    
   
+    return res.status(StatusCodes.OK).json({ accessToken });
+  }
 };
