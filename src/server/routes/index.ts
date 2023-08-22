@@ -12,11 +12,11 @@ router.get("/", (_, res) => {
 router.get("/transacao/", ensureAuthenticated ,TransacoesController.getAllValidation, TransacoesController.getAll);
 
 // Todas as transacoes - Dizimo
-router.get("/transacao/:id_tipos_transacao", TransacoesController.getAllValidation, TransacoesController.getAll);
-router.post("/transacao/", TransacoesController.createValidation, TransacoesController.create);
-router.get("/transacao/:id_tipos_transacao/:id", TransacoesController.getByIdValidation, TransacoesController.getById);
-router.delete("/transacao/:id_tipos_transacao/:id", TransacoesController.deleteByIdValidation, TransacoesController.deleteById);
-router.put("/transacao/:id_tipos_transacao/:id", TransacoesController.updateByIdValidation, TransacoesController.updateById);
+router.get("/transacao/:id_tipos_transacao", ensureAuthenticated, TransacoesController.getAllValidation, TransacoesController.getAll);
+router.post("/transacao/", ensureAuthenticated, TransacoesController.createValidation, TransacoesController.create);
+router.get("/transacao/:id_tipos_transacao/:id", ensureAuthenticated, TransacoesController.getByIdValidation, TransacoesController.getById);
+router.delete("/transacao/:id_tipos_transacao/:id", ensureAuthenticated, TransacoesController.deleteByIdValidation, TransacoesController.deleteById);
+router.put("/transacao/:id_tipos_transacao/:id", ensureAuthenticated, TransacoesController.updateByIdValidation, TransacoesController.updateById);
 
 // Todas as transacoes - Oferta
 // router.get("/transacao/oferta", TransacoesController.getAllValidation, TransacoesController.getAll);

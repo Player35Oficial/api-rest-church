@@ -39,7 +39,7 @@ export const updateById = async (req: Request<IParamProps>, res: Response) => {
     });
   }
 
-  const result = await TransacaoProvider.updateById(req.params.id, req.params.id_tipos_transacao, req.body);
+  const result = await TransacaoProvider.updateById(Number(req.headers.idUsuario),req.params.id, req.params.id_tipos_transacao, req.body);
 
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

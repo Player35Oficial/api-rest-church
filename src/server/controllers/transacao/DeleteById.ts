@@ -18,7 +18,13 @@ export const deleteByIdValidation = validation(getSchema => ({
 }));
 
 export const deleteById = async (req: Request<IParamProps>, res: Response) => {
-  console.log (req.params);
+  console.log(req.params);
+  
+  if (req.headers.cargoUsuario !== "admin") {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      errors: { default: "Usuário atual não possui permissão para realizar essa ação" }
+    });
+  }
 
   if (!req.params.id) {
     return res.status(StatusCodes.BAD_REQUEST).json({
@@ -34,6 +40,7 @@ export const deleteById = async (req: Request<IParamProps>, res: Response) => {
     });
   }
 
+  
   const result = await TransacaoProvider.deleteById(req.params.id, req.params.id_tipos_transacao);
 
   if (result instanceof Error) {
