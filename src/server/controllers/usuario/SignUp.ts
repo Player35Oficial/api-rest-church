@@ -30,5 +30,5 @@ export const create = async (req: Request<{}, {}, IBodyProps>, res: Response) =>
   }
 
 
-  return res.status(StatusCodes.OK).json(result);
+  return res.status(StatusCodes.CREATED).json(result);
 };
