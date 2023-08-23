@@ -21,12 +21,8 @@ export const getAllValidation = validation((getSchema => ({
 
 export const getAll = async (req:Request<{},{},{}, IQueryProps>, res: Response) => {
   const { limit, page } = req.query;
-  // console.log("idUsuario "+ req.headers.idUsuario);
-  // console.log("cargoUsuario " + req.headers.cargoUsuario);
-  console.log(req.headers);
 
   const path: string | any = (req.path.split("/").filter(function (i) {return i;})).pop();
-  // console.log(path);
 
   switch (path) {
     case "dizimo":
@@ -45,7 +41,7 @@ export const getAll = async (req:Request<{},{},{}, IQueryProps>, res: Response) 
         }
       });
   }
-  // console.log(path.indexOf(""));
+
   const results = await TransacaoProvider.getAll(req.query.filter || "", limit || 10, page || 1, Number(req.headers.idUsuario));
 
   if (results instanceof Error) {

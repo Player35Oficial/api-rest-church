@@ -18,7 +18,6 @@ export const deleteByIdValidation = validation(getSchema => ({
 }));
 
 export const deleteById = async (req: Request<IParamProps>, res: Response) => {
-  console.log(req.params);
   
   if (req.headers.cargoUsuario !== "admin") {
     return res.status(StatusCodes.UNAUTHORIZED).json({
