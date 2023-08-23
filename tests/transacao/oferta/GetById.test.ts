@@ -13,6 +13,25 @@ describe("Oferta: GetById", () => {
     accessToken = signInRes.body.accessToken;
   });
 
+  it("Tenta listar um registro pelo id sem estar autenticado", async () => { 
+    const reg = await testServer
+      .post("/transacao")
+      .set({ authorization: "Bearer "+accessToken })
+      .send(
+        {
+          "id_tipos_transacao": "oferta",
+          "valor": 10,
+          "id_usuario": 5
+        }
+      );
+    expect(reg.status).toEqual(StatusCodes.CREATED);
+
+    const singleOferta = await testServer
+      .get("/transacao/oferta/1");
+
+    expect(singleOferta.status).toEqual(StatusCodes.UNAUTHORIZED);
+  });
+
   it("Lista um registro pelo id", async () => {
     const reg = await testServer
       .post("/transacao")

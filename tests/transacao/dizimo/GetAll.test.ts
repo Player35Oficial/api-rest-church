@@ -13,6 +13,14 @@ describe("Dizimo: GetAll", () => {
     accessToken = signInRes.body.accessToken;
   });
 
+  it("Tenta listar registros sem estar autenticado", async () => {
+    const res1 = await testServer
+      .get("/transacao/dizimo")
+      .send();
+    
+    expect(res1.status).toEqual(StatusCodes.UNAUTHORIZED);
+  });
+
   it("Lista todos os registros de dizimo", async () => {
     const res1 = await testServer
       .get("/transacao/dizimo")

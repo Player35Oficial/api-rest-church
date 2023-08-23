@@ -13,6 +13,25 @@ describe("Dizimo: DeleteById", () => {
     accessToken = signInRes.body.accessToken;
   });
 
+  it("Tenta excluir um registro sem estar autenticado", async () => { 
+    const reg = await testServer
+      .post("/transacao")
+      .set({ authorization: "Bearer "+accessToken })
+      .send(
+        {
+          "id_tipos_transacao": "dizimo",
+          "valor": 10,
+          "id_usuario": 5
+        }
+      );
+    expect(reg.status).toEqual(StatusCodes.CREATED);
+
+    const res = await testServer
+      .delete("/transacao/dizimo/1");
+
+    expect(res.status).toEqual(StatusCodes.UNAUTHORIZED);
+  });
+
   it("Exclui um registro de dizimo", async () => {
 
     const reg = await testServer

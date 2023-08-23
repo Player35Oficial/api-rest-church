@@ -13,6 +13,17 @@ describe("Dizimo: Create", () => {
     accessToken = signInRes.body.accessToken;
   });
 
+  it("Tenta criar registro sem estar autenticado", async () => {
+    const res = await testServer
+      .post("/transacao/")
+      .send({
+        "id_tipos_transacao": "dizimo",
+        "valor": 200,
+        "id_usuario": 5
+      });
+    expect(res.status).toEqual(StatusCodes.UNAUTHORIZED);
+  });
+
   it("Cria registro de dizimo", async () => {
     const res = await testServer
       .post("/transacao/")

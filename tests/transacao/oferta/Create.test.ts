@@ -13,6 +13,18 @@ describe("Oferta: Create", () => {
     accessToken = signInRes.body.accessToken;
   });
 
+  it("Tenta criar registro sem estar autenticado", async () => { 
+    const res = await testServer
+      .post("/transacao/")
+      .send({
+        "id_tipos_transacao": "oferta",
+        "valor": 200,
+        "id_usuario": 1
+      });
+    console.log(res.body);
+    expect(res.status).toEqual(StatusCodes.UNAUTHORIZED);
+  });
+
   it("Cria registro de oferta", async () => {
     const res = await testServer
       .post("/transacao/")

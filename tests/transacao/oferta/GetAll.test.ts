@@ -13,6 +13,14 @@ describe("Oferta: Get All", () => {
     accessToken = signInRes.body.accessToken;
   });
 
+  it("Tenta listar todos os registros de oferta sem estar autenticado", async () => { 
+    const res1 = await testServer
+      .get("/transacao/oferta")
+      .send();
+      
+    expect(res1.status).toEqual(StatusCodes.UNAUTHORIZED);
+  });
+
   it("Lista todos os registros de oferta", async () => {
     const res1 = await testServer
       .get("/transacao/oferta")
