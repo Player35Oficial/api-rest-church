@@ -1,0 +1,174 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API de Transação de Dízimos e Ofertas",
+    "description": "Essa APi tem como objetivo a manipulação de dinheiro",
+    "contact": {
+      "email": "yuri.dev35@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333",
+      "description": "API"
+    }
+  ],
+  "paths": {
+    "/cadastrar": {
+      "post": {
+        "summary": "Cadastro de Usuários",
+        "description": "Essa rota será responsável por cadastrar um novo usuário",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user-tobias": {
+                  "value": {
+                    "nome": "Tobias",
+                    "email": "tobias@email.com",
+                    "senha": "senhadotobias123",
+                    "cargo": "membro"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entrar": {
+      "post": {
+        "summary": "Entrada de Usuários",
+        "description": "Essa rota será responsável por autenticar um usuário",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "senha": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "user-tobias": {
+                  "value": {
+                    "email": "tobias@email.com",
+                    "senha": "senhadotobias123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Email ou senha inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao gerar token de acesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Usuário autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          },
+          "cargo": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
