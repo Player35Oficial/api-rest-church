@@ -15,11 +15,60 @@
     }
   ],
   "paths": {
+    "transacao/{id_tipos_transacao}": {
+      "get": {
+        "summary": "Tipos de Transação - SCHEMA",
+        "description": "",
+        "tags": ["Transações - PARAMS"],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          }
+        ]
+      }
+    },
+    "transacao/{id_tipos_transacao}/{id}": {
+      "get": {
+        "summary": "ID de transação relacionado ao tipo de transação - SCHEMA",
+        "description": "",
+        "tags": ["Transações - PARAMS"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id de uma transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ]
+      }
+    },
     "/cadastrar": {
       "post": {
         "summary": "Cadastro de Usuários",
         "description": "Essa rota será responsável por cadastrar um novo usuário",
-        "tags": ["Users"],
+        "tags": ["Usuários"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -62,7 +111,7 @@
       "post": {
         "summary": "Entrada de Usuários",
         "description": "Essa rota será responsável por autenticar um usuário",
-        "tags": ["Users"],
+        "tags": ["Usuários"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -419,6 +468,212 @@
                       "type": "object",
                       "properties": {
                         "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transacao/dizimo/{id}": {
+      "get": {
+        "summary": "Recuperação de dizimo pelo ID",
+        "description": "Rota para recuperar um dizimo pelo id",
+        "tags": ["Transações"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id de uma transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Retorna uma transação registrada como dízimo pelo id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                },
+                "examples": {
+                  "dizimo": {
+                    "value": {
+                      "id_transacao": 1,
+                      "id_usuario": 1,
+                      "id_tipos_transacao": "dizimo",
+                      "valor": 100,
+                      "date": 1696537708211
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transacao/oferta/{id}": {
+      "get": {
+        "summary": "Recuperação de oferta pelo ID",
+        "description": "Rota para recuperar um oferta pelo id",
+        "tags": ["Transações"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id de uma transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Retorna uma transação registrada como oferta pelo id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                },
+                "examples": {
+                  "oferta": {
+                    "value": {
+                      "id_transacao": 3,
+                      "id_usuario": 1,
+                      "id_tipos_transacao": "oferta",
+                      "valor": 15,
+                      "date": 1696537708211
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
                       }
                     }
                   }
