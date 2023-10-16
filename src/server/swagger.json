@@ -20,6 +20,7 @@
         "summary": "Tipos de Transação - SCHEMA",
         "description": "",
         "tags": ["Transações - PARAMS"],
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "id_tipos_transacao",
@@ -44,7 +45,7 @@
           {
             "name": "id_tipos_transacao",
             "in": "path",
-            "description": "Tipo de transação",
+            "description": "Identificador do tipo de transação",
             "required": true,
             "schema": {
               "type": "string",
@@ -311,6 +312,7 @@
         "summary": "Adiciona uma nova transação",
         "description": "Essa rota será responsável por registrar uma nova transação",
         "tags": ["Transações"],
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "content": {
             "application/json": {
@@ -561,7 +563,7 @@
                 },
                 "examples": {
                   "default": {
-                    "values": {
+                    "value": {
                       "default": "Erro ao procurar registros"
                     }
                   }
@@ -594,7 +596,7 @@
       "get": {
         "summary": "Recuperação de dizimo pelo ID",
         "description": "Rota para recuperar um dizimo pelo id",
-        "tags": ["Transações"],
+        "tags": ["Transações - Dizimo"],
         "parameters": [
           {
             "name": "id",
@@ -691,13 +693,226 @@
             }
           }
         }
+      },
+      "put": {
+        "summary": "Atualiza um dizimo pelo id",
+        "description": "Esssa rota será responsável por atualizar um dizimo de acordo com seu id",
+        "tags": ["Transações - Dizimo"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Atualiza uma transação existente no sistema",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "valor": {
+                    "type": "float",
+                    "format": "float",
+                    "default": 0.0,
+                    "minimum": 0.1
+                  }
+                }
+              },
+              "examples": {
+                "dizimo-example": {
+                  "value": {
+                    "valor": 10.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado com sucesso",
+            "content": null
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Transações - Dizimo"],
+        "summary": "Exclui uma transação",
+        "description": "permite que um usuário administrador exclua uma transação",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Transação excluída com sucesso"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/transacao/oferta/{id}": {
       "get": {
         "summary": "Recuperação de oferta pelo ID",
         "description": "Rota para recuperar um oferta pelo id",
-        "tags": ["Transações"],
+        "tags": ["Transações - Oferta"],
         "parameters": [
           {
             "name": "id",
@@ -786,6 +1001,219 @@
                         "default": {
                           "type": "string"
                         }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma oferta pelo id",
+        "description": "Esssa rota será responsável por atualizar uma oferta de acordo com seu id",
+        "tags": ["Transações - Oferta"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Atualiza uma transação existente no sistema",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "valor": {
+                    "type": "float",
+                    "format": "float",
+                    "default": 0.0,
+                    "minimum": 0.1
+                  }
+                }
+              },
+              "examples": {
+                "oferta-example": {
+                  "value": {
+                    "valor": 10.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado com sucesso",
+            "content": null
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Transações - Oferta"],
+        "summary": "Exclui uma transação",
+        "description": "permite que um usuário administrador exclua uma transação",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Transação excluída com sucesso"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
                       }
                     }
                   }
