@@ -126,6 +126,12 @@
                 }
               },
               "examples": {
+                "user-admin": {
+                  "value": {
+                    "email": "admin@mail.com",
+                    "senha": "123456789"
+                  }
+                },
                 "user-tobias": {
                   "value": {
                     "email": "tobias@email.com",
@@ -274,6 +280,112 @@
                       "type": "object",
                       "properties": {
                         "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Adiciona uma nova transação",
+        "description": "Essa rota será responsável por registrar uma nova transação",
+        "tags": ["Transações"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_tipos_transacao": {
+                    "type": "string",
+                    "enum": ["dizimo", "oferta"]
+                  },
+                  "id_usuario": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "valor": {
+                    "type": "double",
+                    "format": "float",
+                    "default": 0.0
+                  }
+                }
+              },
+              "examples": {
+                "dizimo": {
+                  "value": {
+                    "id_tipos_transacao": "dizimo",
+                    "id_usuario": 1,
+                    "valor": 100
+                  }
+                },
+                "oferta": {
+                  "value": {
+                    "id_tipos_transacao": "oferta",
+                    "id_usuario": 1,
+                    "valor": 135
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transação criada com sucesso"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
                       }
                     }
                   }
