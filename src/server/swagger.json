@@ -1,0 +1,1283 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API de Transação de Dízimos e Ofertas",
+    "description": "Essa APi tem como objetivo a manipulação de dinheiro",
+    "contact": {
+      "email": "yuri.dev35@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333",
+      "description": "API"
+    }
+  ],
+  "paths": {
+    "transacao/{id_tipos_transacao}": {
+      "get": {
+        "summary": "Tipos de Transação - SCHEMA",
+        "description": "",
+        "tags": ["Transações - PARAMS"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          }
+        ]
+      }
+    },
+    "transacao/{id_tipos_transacao}/{id}": {
+      "get": {
+        "summary": "ID de transação relacionado ao tipo de transação - SCHEMA",
+        "description": "",
+        "tags": ["Transações - PARAMS"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id de uma transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ]
+      }
+    },
+    "/cadastrar": {
+      "post": {
+        "summary": "Cadastro de Usuários",
+        "description": "Essa rota será responsável por cadastrar um novo usuário",
+        "tags": ["Usuários"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user-tobias": {
+                  "value": {
+                    "nome": "Tobias",
+                    "email": "tobias@email.com",
+                    "senha": "senhadotobias123",
+                    "cargo": "membro"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entrar": {
+      "post": {
+        "summary": "Entrada de Usuários",
+        "description": "Essa rota será responsável por autenticar um usuário",
+        "tags": ["Usuários"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "senha": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "user-admin": {
+                  "value": {
+                    "email": "admin@mail.com",
+                    "senha": "123456789"
+                  }
+                },
+                "user-tobias": {
+                  "value": {
+                    "email": "tobias@email.com",
+                    "senha": "senhadotobias123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Email ou senha inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao gerar token de acesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Usuário autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transacao": {
+      "get": {
+        "summary": "Listagem geral de Transações",
+        "description": "Essa rota tem como objetivo listar todas as transações do usuário",
+        "tags": ["Transações"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de Transações. Por padrão, será retornado as transações realizadas pelo usuário já autenticado",
+            "content": {
+              "applications/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                },
+                "examples": {
+                  "transacoes": {
+                    "value": [
+                      {
+                        "id_transacao": 1,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "dizimo",
+                        "valor": 100,
+                        "date": 1696537708211
+                      },
+                      {
+                        "id_transacao": 2,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "dizimo",
+                        "valor": 150,
+                        "date": 1696537708211
+                      },
+                      {
+                        "id_transacao": 3,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "oferta",
+                        "valor": 15,
+                        "date": 1696537708211
+                      },
+                      {
+                        "id_transacao": 4,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "oferta",
+                        "valor": 25,
+                        "date": 1696537708211
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Adiciona uma nova transação",
+        "description": "Essa rota será responsável por registrar uma nova transação",
+        "tags": ["Transações"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_tipos_transacao": {
+                    "type": "string",
+                    "enum": ["dizimo", "oferta"]
+                  },
+                  "id_usuario": {
+                    "type": "number",
+                    "format": "int64"
+                  },
+                  "valor": {
+                    "type": "double",
+                    "format": "float",
+                    "default": 0.0
+                  }
+                }
+              },
+              "examples": {
+                "dizimo": {
+                  "value": {
+                    "id_tipos_transacao": "dizimo",
+                    "id_usuario": 1,
+                    "valor": 100
+                  }
+                },
+                "oferta": {
+                  "value": {
+                    "id_tipos_transacao": "oferta",
+                    "id_usuario": 1,
+                    "valor": 135
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transação criada com sucesso"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transacao/dizimo": {
+      "get": {
+        "summary": "Listagem de Dízimos do usuário",
+        "description": "Essa rota tem como objetivo listar todos os Dízimos do usuário",
+        "tags": ["Transações"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de Transações de Dizimo. Por Padrão, será retornado os dizimos realizados pelo usuário já autenticado",
+            "content": {
+              "applications/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                },
+                "examples": {
+                  "dizimos": {
+                    "value": [
+                      {
+                        "id_transacao": 1,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "dizimo",
+                        "valor": 100,
+                        "date": 1696537708211
+                      },
+                      {
+                        "id_transacao": 2,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "dizimo",
+                        "valor": 150,
+                        "date": 1696537708211
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "default": "Erro ao procurar registros"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "values": {
+                      "default": "Erro ao procurar registros"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transacao/oferta": {
+      "get": {
+        "summary": "Listagem de Ofertas do usuário",
+        "description": "Essa rota tem como objetivo listar todas as Ofertas do usuário",
+        "tags": ["Transações"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de Transações de Oferta. Por Padrão, será retornado as ofertas realizadas pelo usuário já autenticado",
+            "content": {
+              "applications/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Transaction"
+                  }
+                },
+                "examples": {
+                  "ofertas": {
+                    "value": [
+                      {
+                        "id_transacao": 3,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "oferta",
+                        "valor": 15,
+                        "date": 1696537708211
+                      },
+                      {
+                        "id_transacao": 4,
+                        "id_usuario": 1,
+                        "id_tipos_transacao": "oferta",
+                        "valor": 25,
+                        "date": 1696537708211
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "default": "Erro ao procurar registros"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "default": "Erro ao procurar registros"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transacao/dizimo/{id}": {
+      "get": {
+        "summary": "Recuperação de dizimo pelo ID",
+        "description": "Rota para recuperar um dizimo pelo id",
+        "tags": ["Transações - Dizimo"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id de uma transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Retorna uma transação registrada como dízimo pelo id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                },
+                "examples": {
+                  "dizimo": {
+                    "value": {
+                      "id_transacao": 1,
+                      "id_usuario": 1,
+                      "id_tipos_transacao": "dizimo",
+                      "valor": 100,
+                      "date": 1696537708211
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um dizimo pelo id",
+        "description": "Esssa rota será responsável por atualizar um dizimo de acordo com seu id",
+        "tags": ["Transações - Dizimo"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Atualiza uma transação existente no sistema",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "valor": {
+                    "type": "float",
+                    "format": "float",
+                    "default": 0.0,
+                    "minimum": 0.1
+                  }
+                }
+              },
+              "examples": {
+                "dizimo-example": {
+                  "value": {
+                    "valor": 10.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado com sucesso",
+            "content": null
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Transações - Dizimo"],
+        "summary": "Exclui uma transação",
+        "description": "permite que um usuário administrador exclua uma transação",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Transação excluída com sucesso"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transacao/oferta/{id}": {
+      "get": {
+        "summary": "Recuperação de oferta pelo ID",
+        "description": "Rota para recuperar um oferta pelo id",
+        "tags": ["Transações - Oferta"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id de uma transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Retorna uma transação registrada como oferta pelo id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                },
+                "examples": {
+                  "oferta": {
+                    "value": {
+                      "id_transacao": 3,
+                      "id_usuario": 1,
+                      "id_tipos_transacao": "oferta",
+                      "valor": 15,
+                      "date": 1696537708211
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma oferta pelo id",
+        "description": "Esssa rota será responsável por atualizar uma oferta de acordo com seu id",
+        "tags": ["Transações - Oferta"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Atualiza uma transação existente no sistema",
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "valor": {
+                    "type": "float",
+                    "format": "float",
+                    "default": 0.0,
+                    "minimum": 0.1
+                  }
+                }
+              },
+              "examples": {
+                "oferta-example": {
+                  "value": {
+                    "valor": 10.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado com sucesso",
+            "content": null
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Transações - Oferta"],
+        "summary": "Exclui uma transação",
+        "description": "permite que um usuário administrador exclua uma transação",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id_tipos_transacao",
+            "in": "path",
+            "description": "Identificador do tipo de transação",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["dizimo", "oferta"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id que identifica a transação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Transação excluída com sucesso"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "ausent-id": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id' é obrigatório"
+                      }
+                    }
+                  },
+                  "ausent-id_tipos_transacao": {
+                    "value": {
+                      "errors": {
+                        "default": "O parâmetro 'id_tipos_transacao' é obrigatório"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "default": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          },
+          "cargo": {
+            "type": "string"
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id_transacao": {
+            "type": "number"
+          },
+          "id_usuario": {
+            "type": "number"
+          },
+          "id_tipos_transacao": {
+            "$ref": "#/components/schemas/TransactionTypeENUM"
+          },
+          "valor": {
+            "type": "number"
+          },
+          "date": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Timestamp em milissegundos representando a data da transação"
+          }
+        }
+      },
+      "TransactionTypeENUM": {
+        "type": "string",
+        "enum": ["dizimo", "oferta"],
+        "description": "Enum para diferentes transações"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
